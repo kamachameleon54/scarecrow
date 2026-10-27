@@ -1,0 +1,26 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "scarecrow",
+  "owner": {
+    "name": "Jason Kama",
+    "url": "https://github.com/kamachameleon54/scarecrow"
+  },
+  "description": "Scarecrow skills for building and caring for a durable plain-markdown second brain with Claude Code or Codex.",
+  "plugins": [
+    {
+      "name": "scarecrow",
+      "source": "./plugins/scarecrow",
+      "version": "0.1.0",
+      "description": "A framework front door and five focused skills for setup, source ingestion, session handoff, finished-work capsules, and scheduled upkeep.",
+      "homepage": "https://github.com/kamachameleon54/scarecrow",
+      "repository": "https://github.com/kamachameleon54/scarecrow",
+      "license": "MIT",
+      "keywords": ["second-brain", "knowledge-base", "agents-md", "obsidian", "codex"],
+      "category": "productivity",
+      "author": {
+        "name": "Jason Kama",
+        "url": "https://github.com/kamachameleon54"
+      }
+    }
+  ]
+}

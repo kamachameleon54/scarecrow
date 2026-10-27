@@ -1,0 +1,15 @@
+{
+  "$schema": "https://code.claude.com/schemas/plugin.json",
+  "name": "scarecrow",
+  "version": "0.1.0",
+  "description": "Scarecrow builds and cares for a durable plain-markdown second brain. A framework front door routes to setup, ingest, handoff, capsule, and health-check, with local rules governing sources, corrections, approvals, and upkeep.",
+  "author": {
+    "name": "Jason Kama",
+    "url": "https://github.com/kamachameleon54"
+  },
+  "homepage": "https://github.com/kamachameleon54/scarecrow",
+  "repository": "https://github.com/kamachameleon54/scarecrow",
+  "license": "MIT",
+  "keywords": ["second-brain", "knowledge-base", "agents-md", "obsidian", "codex"],
+  "skills": "./skills/"
+}
