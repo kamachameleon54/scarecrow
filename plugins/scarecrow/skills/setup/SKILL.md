@@ -3,12 +3,12 @@ name: setup
 description: "Builds or adopts a durable second brain that Claude Code or Codex can read and maintain: a plain-markdown folder with a root rules file, immutable sources compiled into a wiki, project work kept beside its context, a corrections register, and dated upkeep. Use when creating a new Scarecrow brain, adding Scarecrow structure around an existing notes folder or Obsidian vault, or setting up AGENTS.md and its CLAUDE.md pointer for agent-maintained knowledge. Not for ingesting one source, session handoff, finished-work capsules, or routine health checks."
 metadata:
   status: draft
-  version: 0.5.0
+  version: 0.5.1
   tags: [second-brain, llm-wiki, knowledge-base, claude-code, codex]
   feedback: ""
   decision: "2026-10-26: Extract the 0.5.0 setup capability into setup; using-scarecrow owns framework routing"
   log: "#Changelog"
-  last-updated: 2026-10-26
+  last-updated: 2026-10-27
 ---
 
 # Setup
@@ -142,7 +142,7 @@ These protect the person's existing work and the brain's trustworthiness:
 
 ## Setup
 
-Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. The script is a copy of the health-check skill's canonical `scripts/check_brain.py`. In canonical development, `tests/test_vendored_script.py` checks parity before packaging; the installed copy is validated against health-check during release. Edit the health-check copy and copy it here, never the reverse. No config file. The agent needs read and write access to the target folder.
+Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. The script is a copy of the health-check skill's canonical `scripts/check_brain.py`. The repository's `tests/test_vendored_script.py` checks parity, and CI runs it with the script's behavior tests. Edit the health-check copy and copy it here, never the reverse. No config file. The agent needs read and write access to the target folder.
 
 ## Coordinates with
 
@@ -154,6 +154,7 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. Th
 
 ## Changelog
 
+- 0.5.1 (2026-10-27): Refreshed the vendored `check_brain.py` from health-check 0.5.2 (robustness and false-positive fixes). No change to setup's steps.
 - 0.5.0 (2026-10-26): Extracted the existing 0.5.0 setup procedure under the setup identity. using-scarecrow owns framework routing; health-check retains canonical check-script ownership. Setup reads local rules before applying package defaults.
 - 0.5.0 (2026-10-25): Added project hub headers with `status`, `last-updated`, `decision`, `feedback`, and `log`, including the optional prompt and skill status set. Rules and page templates add paused-project notes, the Archive test, runbook conventions, Extra checks, and the line-by-line prune test. Adopt mode adds headers and lists clashing state fields without renaming them. Refreshed the vendored `check_brain.py` from health-check 0.5.0 for M9 header checks and M22 status-file freshness. No eval run yet.
 - 0.4.1 (2026-10-17): Vendored `check_brain.py` refreshed from health-check 0.3.0 (new M21 secret-shape check; `.smart-env` skipped). No change to scarecrow's own steps.

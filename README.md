@@ -53,7 +53,7 @@ The bundled `check_brain.py` checker requires Python 3.9 or later and uses only 
 
 Version `0.1.0` is the first Scarecrow framework release. The framework front door, setup, and health-check are draft components; ingest and capsule are testing components; handoff is stable. Component versions are recorded in their skill metadata and can differ from the plugin version.
 
-Local package checks establish archive integrity, file parity, and manifest structure. They do not establish installation, automatic routing, behavior in a fresh Claude Code or Codex session, deployment, or observed results in a live knowledge base. Fresh cross-platform evaluations and a supervised pilot remain necessary before treating the framework as broadly validated.
+The repository's tests (`python -m unittest discover -s tests`, run in CI on Linux, macOS, and Windows with Python 3.9 and 3.13) cover the bundled checker's behavior and the parity of its two copies. They do not establish installation, automatic routing, behavior in a fresh Claude Code or Codex session, deployment, or observed results in a live knowledge base. Fresh cross-platform evaluations and a supervised pilot remain necessary before treating the framework as broadly validated.
 
 ## License
 
