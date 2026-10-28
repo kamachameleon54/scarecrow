@@ -2,7 +2,7 @@
 """Check a second brain: structure (setup's build check) and upkeep (health-check's scheduled visit).
 
 Canonical source: the health-check skill (scripts/check_brain.py). The setup skill ships a
-byte-identical build-check copy, enforced by setup/tests/test_vendored_script.py. Edit this file, then
+byte-identical build-check copy, enforced by the repository's tests/test_vendored_script.py. Edit this file, then
 copy it over the setup copy; never edit the copy.
 
 Usage:
@@ -28,6 +28,7 @@ import hashlib
 import json
 import re
 import sys
+import urllib.parse
 from pathlib import Path
 
 REQUIRED = [
@@ -40,7 +41,8 @@ REQUIRED = [
     "_system/changelog.md",
 ]
 SPECIAL_WIKI = {"index.md", "log.md"}
-LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
+LINK_RE = re.compile(r"\[[^\]]*\]\((<[^>]+>|[^)\s]+)\)")
+CODE_RE = re.compile(r"^(```|~~~).*?^\1[^\n]*$|`[^`\n]+`", re.M | re.S)
 WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|[^\]]*)?\]\]")
 DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 DATE_LOG_RE = re.compile(r"^## \[(\d{4}-\d{2}-\d{2})\]\s*([\w-]+)?", re.M)
@@ -50,8 +52,9 @@ LAST_UPDATED_RE = re.compile(r"Last updated:\s*(\d{4}-\d{2}-\d{2})", re.I)
 MANIFEST = ".manifest.json"
 SKIP_DIRS = {".git", ".obsidian", ".trash", "node_modules", "__pycache__", ".smart-env"}
 HUB_FIELDS = ("status", "last-updated", "decision", "feedback", "log")
-HUB_STATUS = {"active", "paused", "done", "reference",      # project, event and reference hubs
-              "draft", "testing", "stable", "deprecated"}   # optional set for prompt or skill hubs
+HUB_STATUS_ORDER = ("active", "paused", "done", "reference",      # project, event and reference hubs
+                    "draft", "testing", "stable", "deprecated")   # optional set for prompt or skill hubs
+HUB_STATUS = set(HUB_STATUS_ORDER)
 DECISION_RE = re.compile(r"^\d{4}-\d{2}-\d{2}:")
 DEFAULTS = {"stale_days": 90, "pending_days": 14, "status_days": 30, "question_days": 60, "rules_lines": 150}
 
@@ -62,14 +65,47 @@ def report(check, level, msg, path=None, **data):
     results.append({"check": check, "level": level, "msg": msg, "path": path, "data": data or None})
 
 
+def read(path):
+    """File text as UTF-8 whatever the platform locale; undecodable bytes and a leading BOM never stop a run."""
+    return path.read_text(encoding="utf-8", errors="replace").removeprefix("\ufeff")
+
+
+def iso(text):
+    """A YYYY-MM-DD string as a date, or None when it is not a real calendar date."""
+    try:
+        return dt.date.fromisoformat(text)
+    except (TypeError, ValueError):
+        return None
+
+
 def parse_date(text):
     m = DATE_RE.search(text or "")
-    if not m:
-        return None
+    return iso(m.group(0)) if m else None
+
+
+def load_manifest(root):
+    """Recorded checksums: {} when none are recorded yet, None when the manifest cannot be read."""
+    mpath = root / "raw" / MANIFEST
+    if not mpath.exists():
+        return {}
     try:
-        return dt.date.fromisoformat(m.group(0))
+        data = json.loads(read(mpath))
     except ValueError:
         return None
+    return data if isinstance(data, dict) else None
+
+
+def link_paths(text):
+    """(as written, decoded path) for each link outside code; <...> unwrapped, %-escapes decoded, URLs and anchors dropped."""
+    out = []
+    for target in LINK_RE.findall(CODE_RE.sub("", text)):
+        bare = target[1:-1] if target.startswith("<") else target
+        if re.match(r"^[a-z]+:", bare) or bare.startswith("#"):
+            continue
+        clean = urllib.parse.unquote(bare.split("#")[0])
+        if clean:
+            out.append((target, clean))
+    return out
 
 
 def rel(root, p):
@@ -111,10 +147,12 @@ def raw_files(root):
 
 def record_raw(root):
     manifest = {rel(root, p): sha256(p) for p in raw_files(root)}
-    old = {}
     mpath = root / "raw" / MANIFEST
-    if mpath.exists():
-        old = json.loads(mpath.read_text())
+    old = load_manifest(root)
+    if old is None:
+        print(f"Refusing to record: raw/{MANIFEST} is not a readable JSON object. Restore it from version history.")
+        return 1
+    if old:
         changed = [k for k in old if k in manifest and old[k] != manifest[k]]
         if changed:
             print("Refusing to record: these immutable files changed since they were recorded:")
@@ -167,12 +205,7 @@ def verified_date(fm):
 
 
 def check_links(root, path, text):
-    for target in LINK_RE.findall(text):
-        if re.match(r"^[a-z]+:", target) or target.startswith("#"):
-            continue
-        clean = target.split("#")[0]
-        if not clean:
-            continue
+    for target, clean in link_paths(text):
         if not (path.parent / clean).resolve().exists():
             report("M6", "FAIL", f"broken link in {rel(root, path)}: {target}", rel(root, path))
 
@@ -208,7 +241,7 @@ def unquote(value):
 def hub_header(root, hub):
     """M9: the project hub's frontmatter header (status, last-updated, decision, feedback, log)."""
     r = rel(root, hub)
-    text = hub.read_text()
+    text = read(hub)
     fm = frontmatter(text)
     if fm is None:
         report("M9", "WARN", f"{r} has no header ({', '.join(HUB_FIELDS)})", r)
@@ -218,7 +251,7 @@ def hub_header(root, hub):
         report("M9", "WARN", f"{r} header lacks {', '.join(missing)}", r, missing=missing)
     status = unquote(fm.get("status"))
     if status and status not in HUB_STATUS:
-        report("M9", "WARN", f"{r} status '{status}' is not one of active, paused, done, reference", r)
+        report("M9", "WARN", f"{r} status '{status}' is not one of {', '.join(HUB_STATUS_ORDER)}", r)
     if "last-updated" in fm and not parse_date(fm["last-updated"]):
         report("M9", "WARN", f"{r} last-updated is not a YYYY-MM-DD date", r)
     decision = unquote(fm.get("decision"))
@@ -236,18 +269,21 @@ def structure(root, args, th):
         if not (root / r).exists():
             report("M1", "FAIL", f"missing {r}", r)
     log = root / "wiki" / "log.md"
-    if log.exists() and not DATE_LOG_RE.search(log.read_text()):
+    if log.exists() and not DATE_LOG_RE.search(read(log)):
         report("M1", "WARN", "wiki/log.md has no '## [YYYY-MM-DD] ...' entries yet", "wiki/log.md")
 
     claude = root / "CLAUDE.md"
-    if claude.exists() and not re.search(r"^@AGENTS\.md\s*$", claude.read_text(), re.M):
+    if claude.exists() and not re.search(r"^@AGENTS\.md\s*$", read(claude), re.M):
         report("M2", "FAIL", "CLAUDE.md has no '@AGENTS.md' line, so Claude Code will not load the rules", "CLAUDE.md")
 
     agents = root / "AGENTS.md"
     if agents.exists():
-        text = agents.read_text()
-        if not HEALTH_RE.search(text):
+        text = read(agents)
+        m = HEALTH_RE.search(text)
+        if not m:
             report("M3", "FAIL", "AGENTS.md has no 'Next health check: YYYY-MM-DD' line", "AGENTS.md")
+        elif not iso(m.group(1)):
+            report("M3", "FAIL", f"AGENTS.md 'Next health check: {m.group(1)}' is not a real date", "AGENTS.md")
         if "raw/" not in text:
             report("M3", "WARN", "AGENTS.md never mentions raw/; the immutability rule may be missing", "AGENTS.md")
         check_links(root, agents, text)
@@ -257,13 +293,15 @@ def structure(root, args, th):
                    "AGENTS.md", lines=lines, limit=th["rules_lines"])
 
     wiki = root / "wiki"
-    index_text = (wiki / "index.md").read_text() if (wiki / "index.md").exists() else ""
+    index_text = read(wiki / "index.md") if (wiki / "index.md").exists() else ""
+    listed = {(wiki / clean).resolve() for _, clean in link_paths(index_text)}
+    listed_stems = {Path(n.strip()).stem.lower() for n in WIKILINK_RE.findall(CODE_RE.sub("", index_text))}
     if wiki.is_dir():
         for page in sorted(wiki.rglob("*.md")):
             rw = str(page.relative_to(wiki))
             if rw in SPECIAL_WIKI:
                 continue
-            text = page.read_text()
+            text = read(page)
             fm = frontmatter(text)
             path = f"wiki/{rw}"
             if fm is None:
@@ -277,15 +315,19 @@ def structure(root, args, th):
                     report("M4", "WARN", f"{path} is verified: pending (owner has not confirmed takeaways)", path)
                 if "sources" not in fm:
                     report("M4", "WARN", f"{path} frontmatter has no sources", path)
-            if rw not in index_text and page.stem not in index_text:
+            if page.resolve() not in listed and page.stem.lower() not in listed_stems \
+                    and not re.search(rf"(?<![\w/-]){re.escape(rw)}(?![\w-])", index_text):
                 report("M5", "FAIL", f"{path} is not listed in wiki/index.md", path)
             check_links(root, page, text)
         if index_text:
             check_links(root, wiki / "index.md", index_text)
 
     files = raw_files(root)
-    mpath = root / "raw" / MANIFEST
-    manifest = json.loads(mpath.read_text()) if mpath.exists() else {}
+    manifest = load_manifest(root)
+    if manifest is None:
+        report("M7", "FAIL", f"raw/{MANIFEST} is not a readable JSON object; restore it from version history",
+               f"raw/{MANIFEST}")
+        manifest = {}
     for p in files:
         r = rel(root, p)
         if r not in manifest:
@@ -308,7 +350,7 @@ def structure(root, args, th):
             if (proj / "_index.md").exists():
                 hub_header(root, proj / "_index.md")
             for f in proj.rglob("*.md"):
-                check_links(root, f, f.read_text())
+                check_links(root, f, read(f))
     elif not projects.exists() and not args.adopt:
         report("M9", "WARN", "no projects/ folder; work has nowhere to live beside its context", "projects/")
 
@@ -317,10 +359,12 @@ def structure(root, args, th):
 
 def overdue(root, today):
     agents = root / "AGENTS.md"
-    m = HEALTH_RE.search(agents.read_text()) if agents.exists() else None
+    m = HEALTH_RE.search(read(agents)) if agents.exists() else None
     if not m:
         return
-    due = dt.date.fromisoformat(m.group(1))
+    due = iso(m.group(1))
+    if not due:
+        return  # M3 reports the bad date
     if today > due:
         report("M11", "WARN", f"health check overdue since {due} ({(today - due).days} days)", "AGENTS.md",
                due=str(due), days_overdue=(today - due).days)
@@ -334,12 +378,14 @@ def ingest_dates(root):
     log = root / "wiki" / "log.md"
     if not log.exists():
         return out
-    entries = re.split(r"^(?=## \[)", log.read_text(), flags=re.M)
+    entries = re.split(r"^(?=## \[)", read(log), flags=re.M)
     for e in entries:
         m = DATE_LOG_RE.match(e)
         if not m:
             continue
-        d = dt.date.fromisoformat(m.group(1))
+        d = iso(m.group(1))
+        if not d:
+            continue
         for name in re.findall(r"[\w./-]+\.md", e):
             stem = Path(name).stem
             out[stem] = min(out.get(stem, d), d)
@@ -356,7 +402,7 @@ def freshness(root, today, th):
         rw = str(page.relative_to(wiki))
         if rw in SPECIAL_WIKI:
             continue
-        fm = frontmatter(page.read_text())
+        fm = frontmatter(read(page))
         if not fm:
             continue
         path = f"wiki/{rw}"
@@ -381,12 +427,9 @@ def freshness(root, today, th):
 def link_targets(root, src, text):
     """Files a note links to, by markdown link or [[wikilink]] (wikilinks resolved by filename stem)."""
     out = set()
-    for t in LINK_RE.findall(text):
-        if re.match(r"^[a-z]+:", t) or t.startswith("#"):
-            continue
-        p = (src.parent / t.split("#")[0]).resolve()
-        out.add(p)
-    for name in WIKILINK_RE.findall(text):
+    for _, clean in link_paths(text):
+        out.add((src.parent / clean).resolve())
+    for name in WIKILINK_RE.findall(CODE_RE.sub("", text)):
         out.add(("stem", Path(name.strip()).stem.lower()))
     return out
 
@@ -395,6 +438,7 @@ def orphans(root):
     wiki = root / "wiki"
     if not wiki.is_dir():
         return
+    # Capsule pattern pages (*patterns.md) are fed by capsules, not linked from synthesis, so they are exempt.
     pages = [p for p in wiki.rglob("*.md") if str(p.relative_to(wiki)) not in SPECIAL_WIKI
              and not p.name.endswith("patterns.md")]
     inbound = {p.resolve(): 0 for p in pages}
@@ -402,7 +446,7 @@ def orphans(root):
     for src in walk_md(root):
         if immutable(root, src) or src.parent == wiki and src.name in SPECIAL_WIKI:
             continue
-        for t in link_targets(root, src, src.read_text(errors="ignore")):
+        for t in link_targets(root, src, read(src)):
             target = by_stem.get(t[1]) if isinstance(t, tuple) else t
             if target in inbound and target != src.resolve():
                 inbound[target] += 1
@@ -421,13 +465,19 @@ def status_age(root, today, th):
         if not s.exists():
             continue
         path = f"projects/{proj.name}/status.md"
-        m = LAST_UPDATED_RE.search(s.read_text())
+        m = LAST_UPDATED_RE.search(read(s))
         if not m:
             report("M15", "WARN", f"{path} has no 'Last updated: YYYY-MM-DD' line", path)
             continue
-        last = dt.date.fromisoformat(m.group(1))
+        last = iso(m.group(1))
+        if not last:
+            report("M15", "WARN", f"{path} 'Last updated: {m.group(1)}' is not a real date", path)
+            continue
+        # A file counts as newer only when it changed on a later day than status.md itself was last written.
+        # Clones, syncs, and copies rewrite every mtime at once, so they never flag the whole project.
+        since = max(last, dt.date.fromtimestamp(s.stat().st_mtime))
         newer = [rel(root, f) for f in proj.rglob("*") if f.is_file() and f != s and not f.name.startswith(".")
-                 and dt.date.fromtimestamp(f.stat().st_mtime) > last]
+                 and dt.date.fromtimestamp(f.stat().st_mtime) > since]
         age = (today - last).days
         if age > th["status_days"] or newer:
             why = f"last updated {last} ({age} days; limit {th['status_days']})"
@@ -445,13 +495,13 @@ def hub_lag(root):
         hub, s = proj / "_index.md", proj / "status.md"
         if not (hub.exists() and s.exists()):
             continue
-        fm = frontmatter(hub.read_text()) or {}
+        fm = frontmatter(read(hub)) or {}
         confirmed = parse_date(fm.get("last-updated"))
-        m = LAST_UPDATED_RE.search(s.read_text())
+        m = LAST_UPDATED_RE.search(read(s))
         if not (confirmed and m):
             continue
-        updated = dt.date.fromisoformat(m.group(1))
-        if updated > confirmed:
+        updated = iso(m.group(1))
+        if updated and updated > confirmed:
             path = f"projects/{proj.name}/_index.md"
             report("M22", "WARN", f"{path} header confirmed {confirmed}, but status.md was updated {updated}; "
                    "check whether decision and feedback still hold, then bump last-updated", path,
@@ -462,7 +512,7 @@ def open_questions(root, today, th):
     oq = root / "open-questions.md"
     if not oq.exists():
         return
-    for cells in table_rows(oq.read_text()):
+    for cells in table_rows(read(oq)):
         d = parse_date(cells[0]) if cells else None
         if not d:
             continue
@@ -477,7 +527,7 @@ def folder_drift(root, adopt):
     agents = root / "AGENTS.md"
     if not agents.exists():
         return
-    text = agents.read_text()
+    text = read(agents)
     body = section(text, r"(folder map|folders|layout|structure)")
     if body is None:
         report("M17", "INFO", "AGENTS.md has no folder map section; drift check skipped", "AGENTS.md")
@@ -523,7 +573,7 @@ def corrections_prefilter(root, override):
     cfile = corrections_file(root, override)
     if not cfile:
         return
-    rows = table_rows(cfile.read_text())
+    rows = table_rows(read(cfile))
     wrongs = []
     for cells in rows[1:] if rows and not parse_date(rows[0][0]) else rows:
         if len(cells) < 3 or not cells[1] or cells[1].startswith("<"):
@@ -537,7 +587,7 @@ def corrections_prefilter(root, override):
             continue
         needle = w.lower()
         for p in targets:
-            for i, line in enumerate(p.read_text(errors="ignore").splitlines(), 1):
+            for i, line in enumerate(read(p).splitlines(), 1):
                 if needle in line.lower():
                     r = rel(root, p)
                     report("M18", "WARN", f"{r}:{i} contains a known-wrong statement: {w}", r, line=i, wrong=w)
@@ -553,9 +603,9 @@ def uncompiled(root):
     if wiki.is_dir():
         for page in wiki.rglob("*.md"):
             if page.name == "log.md":
-                cited += page.read_text(errors="ignore")
+                cited += read(page)
                 continue
-            fm = frontmatter(page.read_text(errors="ignore"))
+            fm = frontmatter(read(page))
             if fm:
                 cited += "\n".join(fm["_lines"])
     for p in sorted(raw.rglob("*")):
@@ -571,7 +621,7 @@ def capsules(root):
         if not p.name.endswith("-capsule.md") or immutable(root, p):
             continue
         r = rel(root, p)
-        text = p.read_text(errors="ignore")
+        text = read(p)
         body = section(text, r"revision triggers")
         fm = frontmatter(text) or {}
         written = parse_date(fm.get("date", "")) or parse_date(p.name)
@@ -608,7 +658,7 @@ def secrets(root):
         try:
             if p.stat().st_size > 2_000_000:
                 continue
-            lines = p.read_text(errors="ignore").splitlines()
+            lines = read(p).splitlines()
         except OSError:
             continue
         r = rel(root, p)
@@ -626,7 +676,7 @@ def thresholds(root, args):
     th = dict(DEFAULTS)
     agents = root / "AGENTS.md"
     if agents.exists():
-        body = section(agents.read_text(), r"health check") or ""
+        body = section(read(agents), r"health check") or ""
         m = STALE_RULE_RE.search(body)
         if m:
             th["stale_days"] = int(m.group(1))

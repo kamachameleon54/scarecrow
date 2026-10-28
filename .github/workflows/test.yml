@@ -1,0 +1,20 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unittest:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.9", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      # uv installs any CPython on any runner; setup-python has no 3.9 build for current Ubuntu images.
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run --no-project --python ${{ matrix.python }} python -m unittest discover -s tests -v

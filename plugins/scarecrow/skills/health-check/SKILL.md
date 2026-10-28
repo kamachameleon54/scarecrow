@@ -3,12 +3,12 @@ name: health-check
 description: "Runs the scheduled upkeep visit on a second brain or LLM wiki that a command-line agent (Claude Code or Codex) maintains: a markdown folder with a rules file, sources compiled into wiki pages, project folders, and a corrections register. A bundled script finds candidates; the agent then reads them: pages past their verified date, pages restating a known-wrong fact, capsule revision triggers that may have fired, aged or answered open questions, stale project status, orphan pages, and folders that drifted from the rules file. Logs the visit, sets the next date, and returns a fix list, changing nothing else without approval. Use when the rules file's health check date arrives, a scheduled reminder fires, or someone asks to health-check, audit, or tidy their second brain or asks whether it has gone stale. Not for building a brain or adding sources."
 metadata:
   status: draft
-  version: 0.5.1
+  version: 0.5.2
   tags: [second-brain, llm-wiki, knowledge-base, upkeep, claude-code, codex]
   feedback: ""
   decision: "2026-10-26: Reconcile framework routing and setup ownership; retain canonical check-script ownership"
   log: "#Changelog"
-  last-updated: 2026-10-26
+  last-updated: 2026-10-27
 ---
 
 # Health check
@@ -180,6 +180,7 @@ When a scheduled task runs the visit and no one is there to approve, run the ful
 
 ## Changelog
 
+- 0.5.2 (2026-10-27): `check_brain.py` hardening, no new checks. Files are read as UTF-8 on every platform, and a BOM or undecodable byte no longer stops a run. An impossible date in the health-check line is an M3 FAIL, and bad dates elsewhere are skipped or warned, not a traceback. An unreadable manifest is an M7 FAIL, and `--record-raw` refuses to overwrite it. M6 and M14 decode `%20` and `<...>` links and ignore links inside code. M5 matches the index by link target, wikilink, or exact path instead of any substring of the page name. M15 counts a project file as newer only when it changed on a later day than `status.md` was written, so a clone or sync no longer flags every project. Behavior tests live in the repository's `tests/`.
 - 0.5.1 (2026-10-26): Declared using-scarecrow as the framework router and setup as the creator of the brain's local rules and structure. Canonical check-script ownership stays with health-check; existing component relationships and direct invocation remain available.
 
 - 0.5.0 (2026-10-25): Added project hub headers. M9 now reads each `projects/<name>/_index.md` frontmatter and warns when one of `status`, `last-updated`, `decision`, `feedback`, `log` is missing, `status` is outside the project set (or the optional prompt and skill set), `last-updated` is not a date, `decision` does not start with `YYYY-MM-DD:`, a paused hub lacks `## Parked`, or `log` names a file that does not exist. New upkeep check M22 warns when `status.md`'s "Last updated" is newer than the hub's `last-updated`. All warnings, never FAIL, so older brains still pass. J5 drafts the header lines with the status update and applies the Archive test (archive only when nothing in current use reads it). Regression test gains a headerless hub, a paused hub without `## Parked`, and a lagging header. Not yet run. The setup skill's vendored copy updated to match.
