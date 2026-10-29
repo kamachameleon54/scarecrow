@@ -10,7 +10,7 @@
     {
       "name": "scarecrow",
       "source": "./plugins/scarecrow",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "A framework front door and five focused skills for setup, source ingestion, session handoff, finished-work capsules, and scheduled upkeep.",
       "homepage": "https://github.com/kamachameleon54/scarecrow",
       "repository": "https://github.com/kamachameleon54/scarecrow",

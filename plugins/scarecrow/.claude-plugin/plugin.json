@@ -1,7 +1,7 @@
 {
   "$schema": "https://code.claude.com/schemas/plugin.json",
   "name": "scarecrow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scarecrow builds and cares for a durable plain-markdown second brain. A framework front door routes to setup, ingest, handoff, capsule, and health-check, with local rules governing sources, corrections, approvals, and upkeep.",
   "author": {
     "name": "Jason Kama",

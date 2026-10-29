@@ -2,13 +2,13 @@
 name: capsule
 description: "Writes a capsule: a markdown document filed inside the user's knowledge base (an Obsidian vault, a second-brain folder, any markdown notes folder with a rules file) that preserves the reasoning, dead ends, constraints, and revision triggers behind a finished piece of work, so the chats or sessions that produced it can be cleared without losing what was learned. Covers built artifacts, research, project chapters, negotiations, debugging arcs, and meeting debriefs. Use when the user says \"capsule this\", \"make a capsule\", \"time capsule this\", \"distill this thread\", \"compact this before I delete it\", \"preserve what we learned\", or \"save the reasoning here\", or wants to clear chat clutter while keeping the lessons. Not for summaries, status updates, or task capture (\"log\", \"save\", \"capture\", \"track\" as the verb), and not for continuing unfinished work in a new session, which is handoff."
 metadata:
-  version: 4.0.2
+  version: 4.1.0
   status: testing
   tags: [capsule, archival, knowledge-base, second-brain]
   feedback: ""
-  decision: "2026-10-26: Reconcile framework routing and setup ownership while retaining direct capsule invocation"
+  decision: "2026-10-28: Read capsule settings from _system/AGENTS.md as well as the root rules file"
   log: "#Changelog"
-  last-updated: 2026-10-26
+  last-updated: 2026-10-28
 ---
 
 # Capsule
@@ -42,9 +42,9 @@ If the work is still changing, say so: a capsule written on a moving target is w
 
 ## Read the rules first
 
-Find the knowledge base root: the nearest folder at or above the working directory that holds `AGENTS.md` or `CLAUDE.md`. If none exists, ask where the knowledge base lives. Read the root rules file, then any folder-level `AGENTS.md` files along the path to the destination, broadest to most specific.
+Find the knowledge base root: the nearest folder at or above the working directory that holds `AGENTS.md` or `CLAUDE.md`. If none exists, ask where the knowledge base lives. Read the root rules file, then `_system/AGENTS.md` when it exists (a knowledge base whose root file has grown keeps skill settings there so they load only when a skill runs), then any folder-level `AGENTS.md` files along the path to the destination, broadest to most specific.
 
-Look in the rules for a section about capsules (any heading containing "Capsule"). When it exists, it wins over the defaults below. It may set:
+Look in those rules for a section about capsules (any heading containing "Capsule"). When it exists, it wins over the defaults below. It may set:
 
 - **Routing**: where each capsule type goes
 - **Corrections register**: the file of known-wrong facts to check
@@ -209,6 +209,10 @@ Do not offer to publish the artifact or to delete conversations; both are the us
 - health-check: finds capsules with stale revision triggers during upkeep
 
 ## Changelog
+
+### 4.1.0 (2026-10-28)
+
+Settings lookup also reads `_system/AGENTS.md` when it exists, so a knowledge base can move its capsules section out of the always-loaded root rules file. Root-file settings still work unchanged. No eval run.
 
 ### 4.0.2 (2026-10-26)
 

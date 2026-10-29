@@ -2,6 +2,8 @@
 
 Fill every `<...>` from the interview. Delete guidance lines in parentheses. Keep the finished file under about 150 lines: it loads into every session, so each line costs tokens forever. Test each line by asking whether removing it would cause the agent to make a mistake; if not, cut it.
 
+Contents: the AGENTS.md template, the CLAUDE.md pointer (always exactly this shape), and When the root file grows.
+
 ```markdown
 # AGENTS.md: <name of this brain>
 
@@ -96,3 +98,7 @@ Claude Code entry point for this second brain. The rules live in AGENTS.md.
 ```
 
 Why a pointer instead of a copy: two full rules files drift apart the first time one is edited. The `@AGENTS.md` line makes Claude Code load the same file Codex reads.
+
+## When the root file grows
+
+Past about 150 lines, move sections that only matter for one job into folder rules files, so they load only when that job runs: `## Ingest` to `wiki/AGENTS.md`, `## Capsules` and `## Extra checks` to `_system/AGENTS.md`. Put a `CLAUDE.md` containing exactly `@AGENTS.md` beside each (Claude Code loads it when a session reads a file in that folder; the ingest, capsule and health-check skills read the folder file on every run). Leave one line in the root file saying where each section went. Keep `raw/` immutability and the Never list in the root file.

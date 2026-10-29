@@ -3,12 +3,12 @@ name: setup
 description: "Builds or adopts a durable second brain that Claude Code or Codex can read and maintain: a plain-markdown folder with a root rules file, immutable sources compiled into a wiki, project work kept beside its context, a corrections register, and dated upkeep. Use when creating a new Scarecrow brain, adding Scarecrow structure around an existing notes folder or Obsidian vault, or setting up AGENTS.md and its CLAUDE.md pointer for agent-maintained knowledge. Not for ingesting one source, session handoff, finished-work capsules, or routine health checks."
 metadata:
   status: draft
-  version: 0.5.1
+  version: 0.6.0
   tags: [second-brain, llm-wiki, knowledge-base, claude-code, codex]
   feedback: ""
-  decision: "2026-10-26: Extract the 0.5.0 setup capability into setup; using-scarecrow owns framework routing"
+  decision: "2026-10-28: Document moving Ingest, Capsules and Extra checks to folder rules files when the root grows"
   log: "#Changelog"
-  last-updated: 2026-10-27
+  last-updated: 2026-10-28
 ---
 
 # Setup
@@ -82,7 +82,7 @@ If the folder is a git repository, or the person agrees to make it one, commit a
 
 ### 3. Write the rules file
 
-Fill `references/agents-md-template.md` from the interview. The rules file is what the agent will obey for months, so make it specific: name the real domains and project folders, the real never-touch list, and the upkeep date. Keep it under about 150 lines; procedure that only matters occasionally can live in a referenced file. Every settled rule carries its reason and the date it was decided (template, Conventions); a rule with neither is the one a fresh session reopens. Fill each project hub's header from what the person said about that project; a field with no answer yet gets `none` or a line in `open-questions.md`, never a guess. Leave the Extra checks section empty.
+Fill `references/agents-md-template.md` from the interview. The rules file is what the agent will obey for months, so make it specific: name the real domains and project folders, the real never-touch list, and the upkeep date. Keep it under about 150 lines; procedure that only matters occasionally can live in a referenced file. When it grows past that, move sections to folder rules files that load only when needed: the Ingest section to `wiki/AGENTS.md`, the Capsules and Extra checks sections to `_system/AGENTS.md`, each with a `CLAUDE.md` beside it containing `@AGENTS.md`, and a one-line pointer left in the root file. The ingest, capsule and health-check skills read those files. Every settled rule carries its reason and the date it was decided (template, Conventions); a rule with neither is the one a fresh session reopens. Fill each project hub's header from what the person said about that project; a field with no answer yet gets `none` or a line in `open-questions.md`, never a guess. Leave the Extra checks section empty.
 
 ### 4. First ingest, together
 
@@ -154,6 +154,7 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. Th
 
 ## Changelog
 
+- 0.6.0 (2026-10-28): Step 3 and the template describe moving the Ingest section to `wiki/AGENTS.md` and the Capsules and Extra checks sections to `_system/AGENTS.md` (each with a `@AGENTS.md` CLAUDE.md beside it) once the root rules file passes about 150 lines; ingest 1.2.0, capsule 4.1.0 and health-check 0.6.0 read them. New brains still start with one root file. No eval run.
 - 0.5.1 (2026-10-27): Refreshed the vendored `check_brain.py` from health-check 0.5.2 (robustness and false-positive fixes). No change to setup's steps.
 - 0.5.0 (2026-10-26): Extracted the existing 0.5.0 setup procedure under the setup identity. using-scarecrow owns framework routing; health-check retains canonical check-script ownership. Setup reads local rules before applying package defaults.
 - 0.5.0 (2026-10-25): Added project hub headers with `status`, `last-updated`, `decision`, `feedback`, and `log`, including the optional prompt and skill status set. Rules and page templates add paused-project notes, the Archive test, runbook conventions, Extra checks, and the line-by-line prune test. Adopt mode adds headers and lists clashing state fields without renaming them. Refreshed the vendored `check_brain.py` from health-check 0.5.0 for M9 header checks and M22 status-file freshness. No eval run yet.

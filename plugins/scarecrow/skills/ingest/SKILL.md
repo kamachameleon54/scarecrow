@@ -2,13 +2,13 @@
 name: ingest
 description: "Compiles one source into a knowledge base's wiki: decides first whether the file belongs in the wiki at all, then reads it fully, confirms the takeaways with the owner, and writes or updates the compiled page, the index, and the log, leaving the source untouched. Works in any markdown knowledge base with a rules file (AGENTS.md or CLAUDE.md), an immutable sources folder, and a wiki folder, such as a scarecrow-style second brain or an Obsidian vault. Use when the user says \"ingest this\", \"run ingest on\", \"add this to the wiki\", \"compile this into the wiki\", \"wiki this source\", mentions that a new file landed in raw/, asks to promote a project file into reference knowledge, or asks whether something belongs in the wiki. Not for capsules, general note filing, project tracking, summarizing when no source file exists, or setting up a new knowledge base, which is setup."
 metadata:
-  version: 1.1.0
+  version: 1.2.0
   status: testing
   tags: [ingest, wiki, knowledge-base, second-brain]
-  decision: "2026-10-26: Route framework requests through using-scarecrow and new-brain setup to setup"
+  decision: "2026-10-28: Read ingest settings from wiki/AGENTS.md as well as the root rules file"
   feedback: "Testing gate: one live ingest run must pass under the knowledge base's local rules"
   log: "#Changelog"
-  last-updated: 2026-10-26
+  last-updated: 2026-10-28
 ---
 
 # Ingest
@@ -25,9 +25,9 @@ Synthesis done once and kept beats re-reading raw documents on every question, b
 
 ## Read the rules first
 
-Find the knowledge base root: the nearest folder at or above the working directory that holds `AGENTS.md` or `CLAUDE.md`. If none exists, ask where the knowledge base lives. If it has no wiki folder at all, stop and say so; setting up a knowledge base is setup's job. Read the root rules file, then any folder-level `AGENTS.md` files along the path to the source, broadest to most specific.
+Find the knowledge base root: the nearest folder at or above the working directory that holds `AGENTS.md` or `CLAUDE.md`. If none exists, ask where the knowledge base lives. If it has no wiki folder at all, stop and say so; setting up a knowledge base is setup's job. Read the root rules file, then `AGENTS.md` in the compiled-pages folder when it exists (`wiki/AGENTS.md` unless the root rules name another folder; a knowledge base whose root file has grown keeps the ingest procedure and settings there), then any folder-level `AGENTS.md` files along the path to the source, broadest to most specific.
 
-Look in the rules for a section about ingesting (any heading containing "Ingest"). When it exists, it wins over the defaults below, point by point. It may set:
+Look in those rules for a section about ingesting (any heading containing "Ingest"). When it exists, it wins over the defaults below, point by point. It may set:
 
 - **Folders**: where sources live (default `raw/`) and where compiled pages live (default `wiki/`)
 - **Cheaper routes**: the knowledge base's own ladder for files that should not be ingested
@@ -107,6 +107,10 @@ Follow the rules' style section. When it has none, match the existing wiki pages
 - health-check: owns the checksum script and identifies sources waiting for ingest, pages left `verified: pending`, wiki pages missing from the index, and changed source checksums
 
 ## Changelog
+
+### 1.2.0 (2026-10-28)
+
+Settings lookup also reads `AGENTS.md` in the compiled-pages folder (default `wiki/AGENTS.md`) on every run, so a knowledge base can move its ingest section out of the always-loaded root rules file. Root-file settings still work unchanged. No eval run.
 
 ### 1.1.0 (2026-10-26)
 

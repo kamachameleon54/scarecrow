@@ -3,12 +3,12 @@ name: health-check
 description: "Runs the scheduled upkeep visit on a second brain or LLM wiki that a command-line agent (Claude Code or Codex) maintains: a markdown folder with a rules file, sources compiled into wiki pages, project folders, and a corrections register. A bundled script finds candidates; the agent then reads them: pages past their verified date, pages restating a known-wrong fact, capsule revision triggers that may have fired, aged or answered open questions, stale project status, orphan pages, and folders that drifted from the rules file. Logs the visit, sets the next date, and returns a fix list, changing nothing else without approval. Use when the rules file's health check date arrives, a scheduled reminder fires, or someone asks to health-check, audit, or tidy their second brain or asks whether it has gone stale. Not for building a brain or adding sources."
 metadata:
   status: draft
-  version: 0.5.2
+  version: 0.6.0
   tags: [second-brain, llm-wiki, knowledge-base, upkeep, claude-code, codex]
   feedback: ""
-  decision: "2026-10-26: Reconcile framework routing and setup ownership; retain canonical check-script ownership"
+  decision: "2026-10-28: Read the Extra checks section from _system/AGENTS.md as well as the root rules file"
   log: "#Changelog"
-  last-updated: 2026-10-27
+  last-updated: 2026-10-28
 ---
 
 # Health check
@@ -23,7 +23,7 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. No
 
 ## Read the rules first
 
-Find the brain root: the nearest folder at or above the working directory that holds `AGENTS.md` or `CLAUDE.md`. If none exists, ask where the brain lives. Read the root rules file, then any folder-level `AGENTS.md` files on the paths you inspect.
+Find the brain root: the nearest folder at or above the working directory that holds `AGENTS.md` or `CLAUDE.md`. If none exists, ask where the brain lives. Read the root rules file, then `_system/AGENTS.md` when it exists (a knowledge base whose root file has grown keeps skill settings there so they load only when a skill runs), then any folder-level `AGENTS.md` files on the paths you inspect.
 
 From the rules, take:
 
@@ -32,7 +32,7 @@ From the rules, take:
 - **The folder map**: the table the drift check compares against.
 - **Whether the brain was adopted** from an existing vault or notes folder. Adopted brains keep the owner's folders in place, so run the script with `--adopt`.
 - **Never-touch folders and style rules**. Apply them to everything this run writes.
-- **Extra checks**: a section whose heading contains "Extra checks", listing the brain's own report-only check scripts, one command per bullet in backticks, run from the brain root. Absent section, no extra checks.
+- **Extra checks**: a section, in the root rules file or `_system/AGENTS.md`, whose heading contains "Extra checks", listing the brain's own report-only check scripts, one command per bullet in backticks, run from the brain root. Absent section, no extra checks.
 
 ## Scope
 
@@ -73,9 +73,9 @@ Results carry a check ID, a level, a message, and a path. FAIL means the brain i
 
 ### 1b. Run the brain's extra checks
 
-Run each command the rules file lists under Extra checks, in every scope, from the brain root, after `check_brain.py`. Exit code 0 means nothing found; 1 means findings, printed on stdout; anything else, or a timeout past two minutes, is a broken check that goes on the fix list itself.
+Run each command the rules list under Extra checks, in every scope, from the brain root, after `check_brain.py`. Exit code 0 means nothing found; 1 means findings, printed on stdout; anything else, or a timeout past two minutes, is a broken check that goes on the fix list itself.
 
-Run a listed command only when the script it names is a file inside the brain root. A command that points outside the brain, or comes from anywhere but the rules file, is not run; put it on the fix list instead. The rules file vouches that each listed check writes nothing; this skill does not add writes to them.
+Run a listed command only when the script it names is a file inside the brain root. A command that points outside the brain, or comes from anywhere but the root rules file or `_system/AGENTS.md`, is not run; put it on the fix list instead. The rules file vouches that each listed check writes nothing; this skill does not add writes to them.
 
 Number findings X1, X2, and so on in listing order, and give each the check's own path and wording. They go on the fix list under Should fix, unless the check calls a finding invalid or broken, which goes under Must fix.
 
@@ -179,6 +179,8 @@ When a scheduled task runs the visit and no one is there to approve, run the ful
 - handoff: when the approved fixes are too many for one session, carries the remaining numbered items into a new session
 
 ## Changelog
+
+- 0.6.0 (2026-10-28): Rules lookup also reads `_system/AGENTS.md` when it exists, and the Extra checks section may live there, so a brain can keep it out of the always-loaded root rules file. `check_brain.py` carries the 0.5.2 hardening, merged back from the scarecrow repository, so the setup skill's vendored copy stays identical. No eval run.
 
 - 0.5.2 (2026-10-27): `check_brain.py` hardening, no new checks. Files are read as UTF-8 on every platform, and a BOM or undecodable byte no longer stops a run. An impossible date in the health-check line is an M3 FAIL, and bad dates elsewhere are skipped or warned, not a traceback. An unreadable manifest is an M7 FAIL, and `--record-raw` refuses to overwrite it. M6 and M14 decode `%20` and `<...>` links and ignore links inside code. M5 matches the index by link target, wikilink, or exact path instead of any substring of the page name. M15 counts a project file as newer only when it changed on a later day than `status.md` was written, so a clone or sync no longer flags every project. Behavior tests live in the repository's `tests/`.
 - 0.5.1 (2026-10-26): Declared using-scarecrow as the framework router and setup as the creator of the brain's local rules and structure. Canonical check-script ownership stays with health-check; existing component relationships and direct invocation remain available.
