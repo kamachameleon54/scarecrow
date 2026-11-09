@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Offer guided and proposal-first onboarding paths, remember the selected approach in authorized progress records, and resume without repeating the welcome. Clarify that onboarding begins on first invocation unless an install-time launch has been verified in the host.
+
 During first use, suggest an opt-in recurring gap check with guided-reminder or supported unattended-report delivery. Confirm timing, verify scheduling capability and folder access, and distinguish a real scheduled task from a saved upkeep date. Reuse standard health-check behavior and its repair approval boundaries.
 
 Make ongoing development discoverable through ordinary-language requests, relevant milestones, and standard upkeep visits. Reuse ingest, capsule, handoff, health-check, and targeted setup extensions. Adapt through evidence, confirmed preferences, and approved small changes; keep successful ordinary work free of repeated onboarding.

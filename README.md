@@ -49,6 +49,8 @@ Copy a folder from `plugins/scarecrow/skills/` into `~/.claude/skills/` for Clau
 
 After installation, invoke `using-scarecrow` using your host's syntax above and say: "I'm used to chat, but new to working with files this way. Help me get started with one real project."
 
+That first invocation starts onboarding; an automatic conversation at the moment of installation depends on the host and is not assumed. Choose to build step by step or ask for a proposed starting structure before anything is created. Both paths use the same source review and file protections, can change pace, and can resume where you left off.
+
 The guided conversation starts with a useful task, explains where selected context is saved, and works through one source with you. You can speak normally; you do not need to learn commands first. Confirm which preferences should become standing rules. The assistant records your next step so you can resume, then helps you check whether a fresh session can answer from your saved files. You can skip the walkthrough or go directly to a specific task at any time.
 
 The host must permit access to the folder you choose. Scarecrow does not automatically import previous chats or train a model on your files. Existing notes remain subject to the local rules and approval gates.
