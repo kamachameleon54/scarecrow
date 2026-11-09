@@ -3,12 +3,12 @@ name: setup
 description: "Builds or adopts a durable second brain that Claude Code or Codex can read and maintain: a plain-markdown folder with a root rules file, immutable sources compiled into a wiki, project work kept beside its context, a corrections register, and dated upkeep. Use when creating a new Scarecrow brain, adding Scarecrow structure around an existing notes folder or Obsidian vault, or setting up AGENTS.md and its CLAUDE.md pointer for agent-maintained knowledge. Not for ingesting one source, session handoff, finished-work capsules, or routine health checks."
 metadata:
   status: draft
-  version: 0.6.0
+  version: 0.7.0
   tags: [second-brain, llm-wiki, knowledge-base, claude-code, codex]
   feedback: ""
-  decision: "2026-10-28: Document moving Ingest, Capsules and Extra checks to folder rules files when the root grows"
+  decision: "2026-11-08: Add optional guided first use for people moving from chat to a file-backed second brain"
   log: "#Changelog"
-  last-updated: 2026-10-28
+  last-updated: 2026-11-08
 ---
 
 # Setup
@@ -40,6 +40,8 @@ Every brain this skill builds has these four parts. Explain them to the person i
 ## Workflow
 
 ### 1. Interview (short)
+
+For someone getting started with Scarecrow or asking for a walkthrough, read `references/first-session.md` and use it alongside this workflow. It owns the conversational introduction, preference confirmation, and resume record; this skill still owns folder inspection, build/adopt decisions, ingestion, and verification. A direct setup request with sufficient facts can proceed without the walkthrough.
 
 Ask one question at a time; stop as soon as you have enough. If the request already answers a question, do not ask it again.
 
@@ -117,6 +119,8 @@ Then suggest the real test: open a fresh session in the folder and ask a backgro
 
 End with a short summary: mode used, what was created (paths), sources ingested, assumptions made, the upkeep date, and two or three example prompts the person can try in a fresh session.
 
+For guided first use, also follow `references/first-session.md` to record the next step and prepare a fresh-session retrieval check. Distinguish passing the structure checker from observing that a fresh session can retrieve the saved context.
+
 ## Boundaries
 
 These protect the person's existing work and the brain's trustworthiness:
@@ -154,6 +158,7 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. Th
 
 ## Changelog
 
+- 0.7.0 (2026-11-08): Add optional conversational onboarding, confirmed working preferences, a resumable local record, and a fresh-session retrieval check. Keep build/adopt and source-confirmation boundaries in the existing workflow.
 - 0.6.0 (2026-10-28): Step 3 and the template describe moving the Ingest section to `wiki/AGENTS.md` and the Capsules and Extra checks sections to `_system/AGENTS.md` (each with a `@AGENTS.md` CLAUDE.md beside it) once the root rules file passes about 150 lines; ingest 1.2.0, capsule 4.1.0 and health-check 0.6.0 read them. New brains still start with one root file. No eval run.
 - 0.5.1 (2026-10-27): Refreshed the vendored `check_brain.py` from health-check 0.5.2 (robustness and false-positive fixes). No change to setup's steps.
 - 0.5.0 (2026-10-26): Extracted the existing 0.5.0 setup procedure under the setup identity. using-scarecrow owns framework routing; health-check retains canonical check-script ownership. Setup reads local rules before applying package defaults.
@@ -165,3 +170,4 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. Th
 - 0.3.0 (2026-10-08): `check_brain.py` is now a copy of the health-check skill's canonical script, enforced by `tests/test_vendored_script.py`. The verify step runs `--structure`, which keeps the build check to structure; the full run adds upkeep checks for health-check. The rules-length warning moved from 200 to 150 lines, matching the template's target.
 - 0.2.0 (2026-10-08): Added a root `open-questions.md` for unknown facts (separate from a project's to-do open items) and a read-only `received/` folder per project for client or stakeholder documents, with `deliverables/` beside it; the check script now records and verifies `received/` files alongside `raw/`. Both ideas came from the no-skill baseline runs in iteration 1.
 - 0.1.0 (2026-10-08): Pilot. Build-new and adopt-existing modes, four-part layout, AGENTS.md with CLAUDE.md pointer, bundled `check_brain.py`. Iteration-1 evals: 30/30 with skill vs 15/30 without (three cases).
+

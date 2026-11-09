@@ -49,6 +49,8 @@ One source at a time.
 
 Look in `wiki/index.md` first, then the relevant project `_index.md` and `status.md`, then `open-questions.md` (if the answer is listed there as unknown, say so instead of guessing). Cite the page or file each answer comes from. If the answer is not in the folder, say so before using outside knowledge. A good answer worth keeping can be filed as a new wiki page.
 
+(For guided first use only: add a pointer to `_system/onboarding.md` or the agreed progress record. Read it when resuming the walkthrough; a specific work request proceeds directly. Omit this guidance and pointer when no record was created.)
+
 ## Received files and deliverables
 
 Files a client or stakeholder sends go into that project's `received/` exactly as sent; never edit them. Work we produce goes into `deliverables/`. A revision is saved beside the original with a `-v2` style suffix, never over it. After adding files to `received/` or `raw/`, run the check script with `--record-raw`.
@@ -102,3 +104,4 @@ Why a pointer instead of a copy: two full rules files drift apart the first time
 ## When the root file grows
 
 Past about 150 lines, move sections that only matter for one job into folder rules files, so they load only when that job runs: `## Ingest` to `wiki/AGENTS.md`, `## Capsules` and `## Extra checks` to `_system/AGENTS.md`. Put a `CLAUDE.md` containing exactly `@AGENTS.md` beside each (Claude Code loads it when a session reads a file in that folder; the ingest, capsule and health-check skills read the folder file on every run). Leave one line in the root file saying where each section went. Keep `raw/` immutability and the Never list in the root file.
+

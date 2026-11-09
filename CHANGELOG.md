@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+Add conversational first use in `using-scarecrow` 0.2.0 and `setup` 0.7.0 for people moving from chat into file-based work. Start with one real task and source, confirm standing preferences, save a short progress record, and prepare a fresh-session retrieval check. Specific work requests and skipped walkthroughs proceed directly. Installation and cross-platform behavior remain separate validation targets.
+
+Preserve the original outside encounter, checker findings, and focused instruction evaluations in `tests/evals/2026-11-08-first-encounter.md` so later revisions do not replace the initial evidence.
+
 ## 0.2.0 - 2026-10-28
 
 Rules can now live beside the work that uses them. `capsule` 4.1.0 reads `_system/AGENTS.md` after the root rules file, `ingest` 1.2.0 reads `AGENTS.md` in the compiled-pages folder (default `wiki/AGENTS.md`), and `health-check` 0.6.0 accepts an Extra checks section in `_system/AGENTS.md`. `setup` 0.6.0 describes moving those sections out of the root file, each with a `CLAUDE.md` holding `@AGENTS.md` beside it, once the root passes about 150 lines, so they stop loading into every session. Root-file settings still work unchanged.
@@ -9,3 +15,4 @@ Also in this release: hardened the bundled `check_brain.py` (health-check 0.5.2,
 ## 0.1.0 - 2026-10-26
 
 First Scarecrow framework release. Includes the `using-scarecrow` front door and five focused components: `setup`, `ingest`, `handoff`, `capsule`, and `health-check`. Packages the six installable skill sets with a Scarecrow marketplace and plugin manifest for Claude Code and Codex.
+

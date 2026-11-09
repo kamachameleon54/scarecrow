@@ -45,6 +45,14 @@ Invoke `$using-scarecrow`, or a component by name: `$setup`, `$ingest`, `$handof
 
 Copy a folder from `plugins/scarecrow/skills/` into `~/.claude/skills/` for Claude Code or `~/.agents/skills/` for Codex. Install all six for framework routing and component handoffs. With individual Claude Code installs, invoke `/using-scarecrow` or the component's unprefixed skill name.
 
+## First use
+
+After installation, invoke `using-scarecrow` using your host's syntax above and say: "I'm used to chat, but new to working with files this way. Help me get started with one real project."
+
+The guided conversation starts with a useful task, explains where selected context is saved, and works through one source with you. You can speak normally; you do not need to learn commands first. Confirm which preferences should become standing rules. The assistant records your next step so you can resume, then helps you check whether a fresh session can answer from your saved files. You can skip the walkthrough or go directly to a specific task at any time.
+
+The host must permit access to the folder you choose. Scarecrow does not automatically import previous chats or train a model on your files. Existing notes remain subject to the local rules and approval gates.
+
 ## Requirements
 
 The bundled `check_brain.py` checker requires Python 3.9 or later and uses only the standard library. Both `setup` and `health-check` include a copy so each can run independently. The other skills are instructions and need no Python packages. Agents need the filesystem access required by the selected workflow and its local approval rules.
@@ -55,6 +63,9 @@ Version `0.2.0` follows the first release, `0.1.0`. The framework front door, se
 
 The repository's tests (`python -m unittest discover -s tests`, run in CI on Linux, macOS, and Windows with Python 3.9 and 3.13) cover the bundled checker's behavior and the parity of its two copies. They do not establish installation, automatic routing, behavior in a fresh Claude Code or Codex session, deployment, or observed results in a live knowledge base. Fresh cross-platform evaluations and a supervised pilot remain necessary before treating the framework as broadly validated.
 
+The [first outside encounter and focused onboarding observations](tests/evals/2026-11-08-first-encounter.md) preserve what was observed, which instructions were loaded explicitly, and the limits of the shared-host evaluations.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
