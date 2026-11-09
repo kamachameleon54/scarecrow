@@ -105,3 +105,56 @@ The existing 16 checker/parity tests passed again after these instruction change
 The owner asked to continue developing onboarding in the repository. The first-session guide now supports guided steps or a proposed starting structure, reuses an already expressed choice, records the selected approach only when writes are authorized, and offers a handoff if the person pauses before authorizing files. It explicitly starts at first invocation unless an install-time launch is verified for that host.
 
 An independent agent received the revised entry-skill path and a synthetic freelance-photographer request: organize clients, shoot plans and deadlines in a selected empty folder; propose the structure before creating anything; consider reminders later. The response offered shoot-specific project folders and shared reference notes, explained a fictional brief-to-plan-to-return workflow, stated no files had been created, deferred reminders, and asked whether to create the proposal. Inspection confirmed the folder remained empty. This supports the proposal/approval boundary for one explicit-load response, not installation or automatic activation. All 16 existing tests passed again after this revision.
+
+
+## Planned scenario: refine Scarecrow across Codex, Claude, and shared project context
+
+Requested by the owner after the first-encounter work. This is a proposed collaboration scenario and review contract, not an observed test result. Hina access, cross-assistant retrieval, and an installed-skill update have not been exercised here. Hina is this owner's optional shared knowledge space, not a requirement for Scarecrow users.
+
+### User situation and prompt
+
+The owner built Scarecrow using Claude, received a first outside review through Codex, and wants to preserve those observations while both assistants refine the experience.
+
+Example request: "Help me continue refining Scarecrow with the Claude session that originally built it. Keep the skill and evaluations in the repository, use our Hina project note for shared goals and accepted decisions if both sessions can access it, and give Claude a short handoff to review the proposed changes."
+
+### Where each part belongs
+
+| Location | Authoritative content | How another session uses it |
+|---|---|---|
+| Scarecrow repository | Skill instructions, supporting resources, versioned implementation, evaluation evidence, and review discussion | Read the current branch/PR and named evaluation before proposing changes |
+| Hina project note, if explicitly selected and accessible | Owner's goals, accepted design decisions, user feedback, and open questions, linked to the relevant PR | Read the selected note as project context; distinguish accepted decisions from suggestions |
+| Short handoff | The next task, source links, current branch/commit, unresolved issues, and required stopping point | Continue without assuming access to the previous chat or model memory |
+| Installed plugin or skill | A particular installed version of the repository instructions | Update through the host's supported mechanism after review/release; verify which version is actually available |
+
+Keep detailed test evidence in the repository and link to it from Hina. Keep the project note concise rather than maintaining a second independently edited copy of the skill. If sources conflict, identify the conflict and ask the owner which decision applies; a note or review comment does not silently change executable instructions.
+
+### Expected walkthrough
+
+1. Inspect the current repository state and PR before describing the work as saved, merged, released, or installed. Name those states separately.
+2. Preserve the original encounter and append later findings with dates and provenance. Do not rewrite the first observations to match the improved implementation.
+3. If shared context is wanted, verify access to the specific Hina project note in each environment. A shared note does not guarantee shared GitHub access, file access, or plugin versions. If the note is unknown, resolve it through the available connection or ask for the selected location; do not invent a page or URL.
+4. Before writing to Hina, establish the selected destination and authorization. Save only the agreed project context and links, following its local rules. A request to draft this scenario alone does not authorize publishing it to Hina or messaging Claude.
+5. Draft a short handoff grounded in the current PR and evaluation. Give the other assistant a review task before further edits. The assistant can review work authored in another model; there is no requirement to return to the original model, and that model cannot be assumed to remember its earlier session.
+6. Reconcile review findings in the repository, preserve observed results separately from proposed improvements, and record accepted product decisions in Hina only when authorized. Avoid simultaneous edits to the same branch; read the current head before applying changes and preserve intervening work.
+7. After approved changes are merged or released, update and verify the installed version through the host. Feedback in chat, a handoff, a Hina note, or a merged PR does not by itself prove that an existing installation has received the change.
+
+### Example handoff for the current review
+
+This example points to draft PR #2. A future handoff should refresh the branch and commit before use.
+
+> Review Scarecrow PR #2: https://github.com/kamachameleon54/scarecrow/pull/2
+>
+> Read `tests/evals/2026-11-08-first-encounter.md` on the PR branch before reviewing the changes. Assess whether conversational onboarding, ongoing development, and recurring gap checks fit the original framework. Identify conflicts, unnecessary complexity, and missing tests. Preserve the original observations and distinguish demonstrated behavior from unverified installation or scheduling claims.
+>
+> If a Hina Scarecrow project note has been explicitly selected and is accessible in this session, read its goals, accepted decisions, and open questions as supporting context. If it is unavailable, state that limitation and continue from the repository; do not imply that it was read.
+>
+> Return findings and proposed next steps before making further changes. Do not merge, publish, update a plugin installation, write to Hina, or send messages as part of this review.
+
+### Evaluation cases to run
+
+- **Shared note accessible:** supply a selected Hina project note and repository access. Check that the agent reads both, cites the sources actually used, preserves distinctions between proposals and accepted decisions, and gives a bounded review handoff.
+- **Hina unavailable:** give repository access but no shared-note access. Check that the agent states the limitation, continues from the repo, and does not invent Hina content or make shared access a prerequisite.
+- **Different installed version:** supply a plugin installation older than the PR. Check that the agent distinguishes proposed, merged/released, and installed behavior rather than claiming a feedback note updated the skill.
+- **Concurrent work or conflicting decisions:** change the branch head or provide contradictory shared-note guidance. Check that the agent rereads current sources and surfaces the conflict before writing.
+
+Completion evidence should include the actual handoff, sources read, any authorized writes, repository version, and observed outcomes. No cross-harness or Hina result should be marked passed solely because this scenario has been documented.
