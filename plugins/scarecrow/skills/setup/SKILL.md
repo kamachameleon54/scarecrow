@@ -6,7 +6,7 @@ metadata:
   version: 0.7.0
   tags: [second-brain, llm-wiki, knowledge-base, claude-code, codex]
   feedback: ""
-  decision: "2026-11-08: Add optional guided first use for people moving from chat to a file-backed second brain"
+  decision: "2026-11-08: Guide first use and targeted extensions while preserving existing local structure"
   log: "#Changelog"
   last-updated: 2026-11-08
 ---
@@ -18,6 +18,8 @@ Set up the structure and local rules for a Scarecrow second brain. Existing know
 The result is a **hybrid second brain**: context (sources, compiled notes, meeting records, decisions) stored beside the work it produced (deliverables, reusable prompts, status files), governed by one rules file. The pattern comes from Andrej Karpathy's LLM Wiki idea file (https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) and adds two parts his gist leaves open: work kept beside its context, and a corrections register with scheduled upkeep.
 
 ## Two modes
+
+For an existing brain that needs a new project or an approved workflow addition, use **targeted extension**: inventory the relevant area and reuse its folder conventions and rules. Propose only the missing project hub, status, or other agreed pieces. Preserve the rest of the brain; do not rerun first-use onboarding or scaffold a second root. Use the scaffold and verification steps below only for the approved additions. Refer broader questions about what should change to using-scarecrow's `references/develop-your-brain.md`.
 
 Pick the mode from the folder, not from the wording of the request:
 
@@ -101,6 +103,8 @@ Two to five sources is enough to prove the loop works. If the person is not avai
 
 ### 5. Set the upkeep cadence
 
+During guided first use, offer the recurring gap-check setup described in `references/first-session.md` once a useful starting point exists. Its offer makes this upkeep step understandable and optional to schedule; a saved date alone is not an active recurring task.
+
 Write a dated "next health check" into `AGENTS.md` (default: four weeks out) and describe what the check covers: stale `verified` dates, wiki pages missing from the index, orphan pages, broken links, entries in `corrections.md` that compiled pages still contradict, and drift between the rules file and the real folders. Offer to schedule a reminder; create one only if the person says yes.
 
 ### 6. Verify
@@ -120,6 +124,8 @@ Then suggest the real test: open a fresh session in the folder and ask a backgro
 End with a short summary: mode used, what was created (paths), sources ingested, assumptions made, the upkeep date, and two or three example prompts the person can try in a fresh session.
 
 For guided first use, also follow `references/first-session.md` to record the next step and prepare a fresh-session retrieval check. Distinguish passing the structure checker from observing that a fresh session can retrieve the saved context.
+
+Once the first useful result exists, offer one relevant example of using or developing the brain next, based on its actual purpose. The person may continue real work or explore how the setup should grow; neither requires another onboarding interview.
 
 ## Boundaries
 

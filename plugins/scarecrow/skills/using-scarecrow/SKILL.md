@@ -1,11 +1,11 @@
 ---
 name: using-scarecrow
-description: "Guides newcomers from familiar chat into a Scarecrow second brain and routes work to setup, ingest, handoff, capsule, or health-check. Use when getting started with Scarecrow, learning how to work with its saved files, when the right component is unclear, or when beginning work in a Scarecrow-managed knowledge base. Read local rules first and load only the component that owns the request."
+description: "Guides first use and ongoing development of a Scarecrow second brain, routing work to setup, ingest, handoff, capsule, or health-check. Use when getting started, exploring or adapting a setup, asking where something belongs or what to build next, when the right component is unclear, or when beginning work in a Scarecrow-managed knowledge base. Read local rules first and load only the component that owns the request."
 metadata:
   status: draft
   version: 0.2.0
   last-updated: 2026-11-08
-  decision: "2026-11-08: Introduce guided first use through one useful task; setup owns the shared onboarding procedure."
+  decision: "2026-11-08: Make first use and ongoing development conversational, using existing components and confirmed local rules."
   feedback: "none"
   log: "#Changelog"
   tags: []
@@ -26,12 +26,18 @@ When the local rules point to an onboarding record (default `_system/onboarding.
 | Need | Load |
 |---|---|
 | Create a new brain or adopt an existing notes folder | `setup` |
+| Explore the setup, decide where something belongs, adapt to changed work, or choose what to build next | Read `references/develop-your-brain.md`, then load the component it selects |
 | Compile one source into durable reference knowledge | `ingest` |
 | Continue unfinished work in another session | `handoff` |
 | Preserve the reasoning behind completed work | `capsule` |
 | Inspect and maintain system health | `health-check` |
+| Review gaps or run the agreed recurring maintenance visit | `health-check` in standard scope, unless the person asks for a quick or deep check |
 
 If a request spans components, use the fewest components that fully cover it and keep each component's stopping condition. Do not copy a component's procedure into this skill.
+
+## Keep the path visible
+
+Explain the next useful action in the person's language rather than requiring component names. At a milestone or when the person expresses friction, briefly offer one relevant way to develop the setup; follow `references/develop-your-brain.md`. Finish a concrete work request first. During ordinary successful work, keep helping without repeating invitations or treating every correction as a redesign request. Routine exploration is available whenever requested, and a standard health-check can surface it at the agreed upkeep visit.
 
 ## Shared doctrine
 

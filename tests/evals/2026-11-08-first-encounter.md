@@ -82,3 +82,20 @@ A second independent agent, with no inherited conversation or supplied source fa
 > The **room booking remains unconfirmed**.
 
 It cited `wiki/seed-swap.md`, matching the generated page. This establishes one successful fresh-agent retrieval from files created during the revised onboarding, within this shared host. It does not establish plugin installation, a separately launched CLI session, automatic skill discovery, or Claude Code behavior. The retrieval agent was instructed to make no writes, so the fixture record was intentionally left at `ready-for-retrieval-check`; this appended observation is the evidence of the retrieval result.
+
+## Appended: owner identifies the existing development path
+
+The owner pointed out that Scarecrow already contains additional steps for developing the brain beyond initial setup. A closer review confirmed this: ingest's routing ladder grows reference knowledge selectively; capsules preserve organization decisions, reusable patterns, and revision triggers; health-check J3 and J5-J10 revisit decisions, status, folder fit, rule quality, contradictions, and consolidation. The observer's earlier explanation understated those existing capabilities by describing ongoing development as largely missing.
+
+The resulting change is chiefly discoverability and coordination: ordinary-language requests now reach a development guide, setup can make a targeted extension, local rules describe evidence-based adaptation, and standard upkeep can surface an optional fit question. The existing components retain ownership and approval boundaries. Repeated usage is evidence only when present in the available record or supplied by the owner; the guide does not invent a history or silently turn one-off requests into standing preferences.
+
+## Appended: recurring maintenance invitation
+
+The owner requested that first use suggest a recurring gap check. The setup already had a four-week upkeep date and an offer to schedule a reminder; the revision makes this a dedicated conversational step after a useful result. It proposes a guided-review reminder or a supported unattended standard health-check report, asks for opt-in and missing timing details, checks host capability and folder access, and reports whether a real scheduled task was created. A saved date is explicitly not a timer. Installation does not itself enable background work. No recurring task for the owner was requested or created during this repository change.
+
+Two further independent agents received the revised skill paths and synthetic requests, with no inherited conversation:
+
+- **Explore growth:** the owner of the generated garden brain asks whether workshop planning should all go in the wiki, requesting options before changes. The response cited local rules and the seed-swap hub, distinguished reference knowledge from project work, offered three bounded options, and recommended starting with one workshop project. It labeled paths as proposals and changed no files. This checks one exploration response, not implementation of an extension.
+- **Maintenance invitation:** the owner says the first useful notes are saved and asks how to remember maintenance. The response listed missing/outdated information, unresolved questions, broken links, conflicts, and setup fit; identified the saved December 7 review date; explicitly said no reminder was scheduled; and asked whether to set up a recurring reminder or review on demand. The test explicitly prohibited scheduler writes. It checks explanation and opt-in, not scheduler availability or task creation.
+
+The existing 16 checker/parity tests passed again after these instruction changes. Skill frontmatter parsed and referenced files were present. No separate Codex/Claude installation or real scheduler execution was validated by these runs.

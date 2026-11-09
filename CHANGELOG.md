@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+During first use, suggest an opt-in recurring gap check with guided-reminder or supported unattended-report delivery. Confirm timing, verify scheduling capability and folder access, and distinguish a real scheduled task from a saved upkeep date. Reuse standard health-check behavior and its repair approval boundaries.
+
+Make ongoing development discoverable through ordinary-language requests, relevant milestones, and standard upkeep visits. Reuse ingest, capsule, handoff, health-check, and targeted setup extensions. Adapt through evidence, confirmed preferences, and approved small changes; keep successful ordinary work free of repeated onboarding.
+
 Add conversational first use in `using-scarecrow` 0.2.0 and `setup` 0.7.0 for people moving from chat into file-based work. Start with one real task and source, confirm standing preferences, save a short progress record, and prepare a fresh-session retrieval check. Specific work requests and skipped walkthroughs proceed directly. Installation and cross-platform behavior remain separate validation targets.
 
 Preserve the original outside encounter, checker findings, and focused instruction evaluations in `tests/evals/2026-11-08-first-encounter.md` so later revisions do not replace the initial evidence.

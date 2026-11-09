@@ -59,6 +59,10 @@ Files a client or stakeholder sends go into that project's `received/` exactly a
 
 When an answer to a question turns up, move it out of `open-questions.md` into the page or `status.md` where it belongs, citing where it came from.
 
+## Developing the setup
+
+Use the current structure for ordinary work. When the owner asks to explore it, their work changes, or relevant records show recurring friction, review the relevant files and offer one small improvement with evidence and tradeoffs. Confirm standing preferences; propose rules or structural changes under the approval rules below. Record accepted changes with reason and date in `_system/changelog.md`. Offer exploration during agreed upkeep visits; honor on-request-only guidance (adapt to actual work without repeated setup interviews; decided <YYYY-MM-DD>).
+
 ## Before anything leaves this folder
 
 Check drafts against `_system/corrections.md`. Replace any listed wrong fact with its correction.

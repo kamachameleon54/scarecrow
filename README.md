@@ -53,6 +53,16 @@ The guided conversation starts with a useful task, explains where selected conte
 
 The host must permit access to the folder you choose. Scarecrow does not automatically import previous chats or train a model on your files. Existing notes remain subject to the local rules and approval gates.
 
+First use also suggests a short recurring gap check, initially every four weeks. You can opt into a reminder for a guided review or, where the host can schedule work and access the folder, a recurring health-check report. Scarecrow confirms the timing and creates a task only with your agreement. Installation alone does not start background work. Without scheduling support, the next upkeep date stays in your rules and you can ask: "Review my second brain for gaps and maintenance."
+
+## Keep developing your brain
+
+Setup is the first useful working version. You can return to Scarecrow in ordinary language: "Where should this live?", "Help me explore my setup", "My work has changed", or "What could I build next?" It uses the current rules and relevant saved work to discuss a small improvement, rather than restarting onboarding.
+
+The existing components support that development: ingest grows cross-project reference knowledge; capsules preserve requested lessons and reusable patterns; handoff carries unfinished work forward; and health-check revisits stale knowledge, rules, folders, and decisions. Setup can extend an existing brain with an agreed project or workflow. Exploration can also conclude that the current structure is enough.
+
+Standing preferences and accepted changes are saved with your confirmation so later sessions can follow them. Standard upkeep visits can include a short conversation about whether the setup still fits; ask to keep those invitations on request only if you prefer.
+
 ## Requirements
 
 The bundled `check_brain.py` checker requires Python 3.9 or later and uses only the standard library. Both `setup` and `health-check` include a copy so each can run independently. The other skills are instructions and need no Python packages. Agents need the filesystem access required by the selected workflow and its local approval rules.
