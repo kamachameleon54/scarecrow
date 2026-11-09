@@ -101,7 +101,7 @@ M21 hits go under Must fix. The script reports a fingerprint (kind, first four c
 
 ### 3. Write the fix list
 
-For a standard or deep visit, also consider whether the structure still fits the owner's work. Use the purpose, relevant project status, correction patterns, and capsule lessons already examined. If there is a specific signal, offer one optional development choice with its evidence; if checks are clean and fit is unknown, ask one brief fit question at handover unless the owner prefers invitations on request only. Keep development opportunities separate from defects. Route a requested exploration through using-scarecrow's `references/develop-your-brain.md`; keep this skill's existing write and approval limits. A quick check stays script-only.
+For a standard or deep visit, also consider whether the structure still fits the owner's work. Use the purpose, relevant project status, correction patterns, and capsule lessons already examined. If there is a specific signal, offer one optional development choice with its evidence; if checks are clean and fit is unknown, ask one brief fit question at handover unless the owner prefers invitations on request only. Keep development opportunities separate from defects. If the owner asks to explore further and using-scarecrow is installed, route the request through its `references/develop-your-brain.md`; when it is not installed, discuss the one choice above and add any agreed change to the fix list for approval. Either way, keep this skill's existing write and approval limits. A quick check stays script-only.
 
 Number every item so the owner can approve by number. Group them:
 
@@ -184,7 +184,7 @@ When a scheduled task runs the visit and no one is there to approve, run the ful
 
 ## Changelog
 
-- 0.7.0 (2026-11-08): Standard and deep visits can surface one evidence-based development opportunity or fit question, routing requested exploration through using-scarecrow. Quick checks and write/approval limits are unchanged. The checker script is unchanged.
+- 0.7.0 (2026-11-08): Standard and deep visits can surface one evidence-based development opportunity or fit question, routing requested exploration through using-scarecrow when it is installed and keeping it on the fix list when it is not. Quick checks and write/approval limits are unchanged. The checker script is unchanged.
 
 - 0.6.0 (2026-10-28): Rules lookup also reads `_system/AGENTS.md` when it exists, and the Extra checks section may live there, so a brain can keep it out of the always-loaded root rules file. `check_brain.py` carries the 0.5.2 hardening, merged back from the scarecrow repository, so the setup skill's vendored copy stays identical. No eval run.
 

@@ -19,7 +19,7 @@ The result is a **hybrid second brain**: context (sources, compiled notes, meeti
 
 ## Two modes
 
-For an existing brain that needs a new project or an approved workflow addition, use **targeted extension**: inventory the relevant area and reuse its folder conventions and rules. Propose only the missing project hub, status, or other agreed pieces. Preserve the rest of the brain; do not rerun first-use onboarding or scaffold a second root. Use the scaffold and verification steps below only for the approved additions. Refer broader questions about what should change to using-scarecrow's `references/develop-your-brain.md`.
+For an existing brain that needs a new project or an approved workflow addition, use **targeted extension**: inventory the relevant area and reuse its folder conventions and rules. Propose only the missing project hub, status, or other agreed pieces. Preserve the rest of the brain; do not rerun first-use onboarding or scaffold a second root. Use the scaffold and verification steps below only for the approved additions. For broader questions about what should change, use using-scarecrow's `references/develop-your-brain.md` when using-scarecrow is installed; otherwise ask which one change the person wants and handle it as a targeted extension.
 
 Pick the mode from the folder, not from the wording of the request:
 
@@ -105,7 +105,7 @@ Two to five sources is enough to prove the loop works. If the person is not avai
 
 During guided first use, offer the recurring gap-check setup described in `references/first-session.md` once a useful starting point exists. Its offer makes this upkeep step understandable and optional to schedule; a saved date alone is not an active recurring task.
 
-Write a dated "next health check" into `AGENTS.md` (default: four weeks out) and describe what the check covers: stale `verified` dates, wiki pages missing from the index, orphan pages, broken links, entries in `corrections.md` that compiled pages still contradict, and drift between the rules file and the real folders. Offer to schedule a reminder; create one only if the person says yes.
+Write a dated "next health check" into `AGENTS.md` (default: four weeks out) and describe what the check covers: stale `verified` dates, wiki pages missing from the index, orphan pages, broken links, entries in `corrections.md` that compiled pages still contradict, and drift between the rules file and the real folders. Outside guided first use, offer to schedule a reminder; create one only if the person says yes. During guided first use, the gap-check offer above replaces this one, so do not ask again.
 
 ### 6. Verify
 
@@ -164,7 +164,7 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. Th
 
 ## Changelog
 
-- 0.7.0 (2026-11-08): Add optional conversational onboarding, confirmed working preferences, a resumable local record, and a fresh-session retrieval check. Keep build/adopt and source-confirmation boundaries in the existing workflow.
+- 0.7.0 (2026-11-08): Add optional conversational onboarding, confirmed working preferences, a resumable local record, and a fresh-session retrieval check. Keep build/adopt and source-confirmation boundaries in the existing workflow. Targeted extension works without using-scarecrow installed, and guided first use asks about scheduling once.
 - 0.6.0 (2026-10-28): Step 3 and the template describe moving the Ingest section to `wiki/AGENTS.md` and the Capsules and Extra checks sections to `_system/AGENTS.md` (each with a `@AGENTS.md` CLAUDE.md beside it) once the root rules file passes about 150 lines; ingest 1.2.0, capsule 4.1.0 and health-check 0.6.0 read them. New brains still start with one root file. No eval run.
 - 0.5.1 (2026-10-27): Refreshed the vendored `check_brain.py` from health-check 0.5.2 (robustness and false-positive fixes). No change to setup's steps.
 - 0.5.0 (2026-10-26): Extracted the existing 0.5.0 setup procedure under the setup identity. using-scarecrow owns framework routing; health-check retains canonical check-script ownership. Setup reads local rules before applying package defaults.
