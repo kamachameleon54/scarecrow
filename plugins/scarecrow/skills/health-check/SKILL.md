@@ -1,14 +1,14 @@
 ---
 name: health-check
-description: "Runs the scheduled upkeep visit on a second brain or LLM wiki that a command-line agent (Claude Code or Codex) maintains: a markdown folder with a rules file, sources compiled into wiki pages, project folders, and a corrections register. A bundled script finds candidates; the agent then reads them: pages past their verified date, pages restating a known-wrong fact, capsule revision triggers that may have fired, aged or answered open questions, stale project status, orphan pages, and folders that drifted from the rules file. Logs the visit, sets the next date, and returns a fix list, changing nothing else without approval. Use when the rules file's health check date arrives, a scheduled reminder fires, or someone asks to health-check, audit, or tidy their second brain or asks whether it has gone stale. Not for building a brain or adding sources."
+description: "Runs upkeep and recurring gap checks on a second brain or LLM wiki maintained by Claude Code or Codex. Checks structure, stale knowledge, corrections, capsule revision triggers, unresolved questions, project status, and whether the setup still fits the owner's work. Logs the visit, sets the next date, and proposes fixes with evidence, changing nothing else without approval. Use when the health-check date arrives, an agreed maintenance reminder fires, or someone asks for a gap check, health-check, audit, tidy-up, or stale-knowledge review. Not for building a brain or adding sources."
 metadata:
   status: draft
-  version: 0.6.0
+  version: 0.7.0
   tags: [second-brain, llm-wiki, knowledge-base, upkeep, claude-code, codex]
   feedback: ""
-  decision: "2026-10-28: Read the Extra checks section from _system/AGENTS.md as well as the root rules file"
+  decision: "2026-11-08: Surface optional setup-fit exploration during standard upkeep while preserving repair boundaries"
   log: "#Changelog"
-  last-updated: 2026-10-28
+  last-updated: 2026-11-08
 ---
 
 # Health check
@@ -35,6 +35,8 @@ From the rules, take:
 - **Extra checks**: a section, in the root rules file or `_system/AGENTS.md`, whose heading contains "Extra checks", listing the brain's own report-only check scripts, one command per bullet in backticks, run from the brain root. Absent section, no extra checks.
 
 ## Scope
+
+A "gap check" or agreed recurring maintenance review uses standard scope unless a different scope was requested. In addition to the existing mechanical and judgment checks, explain missing source coverage, aged unknowns, or setup-fit opportunities when the inspected evidence supports them. Absence of an answer is an unknown to confirm, not evidence that a new folder or tool is needed. A guided visit ends with one question or prioritized choice the person can act on; an unattended visit returns that question in the report. Scheduling is host-owned and opt-in; an upkeep date in the rules does not itself run anything.
 
 | Scope | Runs | When |
 |---|---|---|
@@ -98,6 +100,8 @@ The structural FAILs need no judgment pass; they go straight onto the fix list. 
 M21 hits go under Must fix. The script reports a fingerprint (kind, first four characters, length), never the value; keep it that way in the fix list and the log. Open the line to confirm it is a live key and not a placeholder or an example, then hand it to the owner to rotate and remove. Removal is the owner's call like every other fix, and a key in `raw/` is rotated, not edited out, since sources stay immutable. A signed S3 link's `AWSAccessKeyId` is public by design and is not reported.
 
 ### 3. Write the fix list
+
+For a standard or deep visit, also consider whether the structure still fits the owner's work. Use the purpose, relevant project status, correction patterns, and capsule lessons already examined. If there is a specific signal, offer one optional development choice with its evidence; if checks are clean and fit is unknown, ask one brief fit question at handover unless the owner prefers invitations on request only. Keep development opportunities separate from defects. If the owner asks to explore further and using-scarecrow is installed, route the request through its `references/develop-your-brain.md`; when it is not installed, discuss the one choice above and add any agreed change to the fix list for approval. Either way, keep this skill's existing write and approval limits. A quick check stays script-only.
 
 Number every item so the owner can approve by number. Group them:
 
@@ -180,6 +184,8 @@ When a scheduled task runs the visit and no one is there to approve, run the ful
 
 ## Changelog
 
+- 0.7.0 (2026-11-08): Standard and deep visits can surface one evidence-based development opportunity or fit question, routing requested exploration through using-scarecrow when it is installed and keeping it on the fix list when it is not. Quick checks and write/approval limits are unchanged. The checker script is unchanged.
+
 - 0.6.0 (2026-10-28): Rules lookup also reads `_system/AGENTS.md` when it exists, and the Extra checks section may live there, so a brain can keep it out of the always-loaded root rules file. `check_brain.py` carries the 0.5.2 hardening, merged back from the scarecrow repository, so the setup skill's vendored copy stays identical. No eval run.
 
 - 0.5.2 (2026-10-27): `check_brain.py` hardening, no new checks. Files are read as UTF-8 on every platform, and a BOM or undecodable byte no longer stops a run. An impossible date in the health-check line is an M3 FAIL, and bad dates elsewhere are skipped or warned, not a traceback. An unreadable manifest is an M7 FAIL, and `--record-raw` refuses to overwrite it. M6 and M14 decode `%20` and `<...>` links and ignore links inside code. M5 matches the index by link target, wikilink, or exact path instead of any substring of the page name. M15 counts a project file as newer only when it changed on a later day than `status.md` was written, so a clone or sync no longer flags every project. Behavior tests live in the repository's `tests/`.
@@ -191,3 +197,4 @@ When a scheduled task runs the visit and no one is there to approve, run the ful
 - 0.3.0 (2026-10-17): New upkeep check M21, secret-shaped values in text files (`.md`, `.txt`, `.csv`, `.json`, `.yaml`, `.env` and similar, under 2 MB): AWS key ids, GitHub, `sk-`, Slack, Stripe live, Google API keys, private-key headers, JWTs, reported as a fingerprint only and read under Must fix. Signed S3 links (`AWSAccessKeyId=`) are exempt. `.smart-env` (Smart Connections cache) joins the skipped folders for every check. Regression test gains a planted key, a placeholder, and a signed URL. The setup skill's vendored copy updated to match.
 - 0.2.0 (2026-10-12): J8 gains an undated-rule pass that runs on every standard visit, not only when M10 flags length: each rule or settled decision in the rules file with neither a reason nor a date goes on the fix list with a proposed `<rule> (<reason>; decided YYYY-MM-DD)` rewrite, reason and date taken from the change log, a capsule, or the owner, never invented; at most ten per visit. Judgment only; `check_brain.py` is unchanged, so setup's vendored copy stays identical. Pairs with setup 0.4.0's decision-reason-date convention. The dated-rule practice is unmeasured.
 - 0.1.0 (2026-10-08): First build. Owns the canonical `check_brain.py`, extended from setup's build check with upkeep checks M10 to M20 (rules length, overdue visit, stale and pending pages with OKF `verified`/`stale_after` support, orphans, project status age, aged open questions, folder-map drift, literal corrections match, capsule trigger inventory, raw sources never compiled), `--structure` and `--json` modes, and per-run thresholds. Judgment checks J1 to J8 in standard scope, J9 and J10 as opt-in deep scope. Thresholds confirmed with the owner 2026-10-08: 90, 14, 30, 60 days and 150 lines. M20 added after iteration-1 evals, where five of six runs found never-ingested sources by reading. Iteration 1 (three cases): with the skill 36 of 36, after setting aside 4 write assertions a harness permission block prevented; without it 33 of 40 (see `evals/eval-2026-10-08.md`).
+

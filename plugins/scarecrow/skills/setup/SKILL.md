@@ -3,12 +3,12 @@ name: setup
 description: "Builds or adopts a durable second brain that Claude Code or Codex can read and maintain: a plain-markdown folder with a root rules file, immutable sources compiled into a wiki, project work kept beside its context, a corrections register, and dated upkeep. Use when creating a new Scarecrow brain, adding Scarecrow structure around an existing notes folder or Obsidian vault, or setting up AGENTS.md and its CLAUDE.md pointer for agent-maintained knowledge. Not for ingesting one source, session handoff, finished-work capsules, or routine health checks."
 metadata:
   status: draft
-  version: 0.6.0
+  version: 0.7.0
   tags: [second-brain, llm-wiki, knowledge-base, claude-code, codex]
   feedback: ""
-  decision: "2026-10-28: Document moving Ingest, Capsules and Extra checks to folder rules files when the root grows"
+  decision: "2026-11-08: Guide first use and targeted extensions while preserving existing local structure"
   log: "#Changelog"
-  last-updated: 2026-10-28
+  last-updated: 2026-11-08
 ---
 
 # Setup
@@ -18,6 +18,8 @@ Set up the structure and local rules for a Scarecrow second brain. Existing know
 The result is a **hybrid second brain**: context (sources, compiled notes, meeting records, decisions) stored beside the work it produced (deliverables, reusable prompts, status files), governed by one rules file. The pattern comes from Andrej Karpathy's LLM Wiki idea file (https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) and adds two parts his gist leaves open: work kept beside its context, and a corrections register with scheduled upkeep.
 
 ## Two modes
+
+For an existing brain that needs a new project or an approved workflow addition, use **targeted extension**: inventory the relevant area and reuse its folder conventions and rules. Propose only the missing project hub, status, or other agreed pieces. Preserve the rest of the brain; do not rerun first-use onboarding or scaffold a second root. Use the scaffold and verification steps below only for the approved additions. For broader questions about what should change, use using-scarecrow's `references/develop-your-brain.md` when using-scarecrow is installed; otherwise ask which one change the person wants and handle it as a targeted extension.
 
 Pick the mode from the folder, not from the wording of the request:
 
@@ -40,6 +42,8 @@ Every brain this skill builds has these four parts. Explain them to the person i
 ## Workflow
 
 ### 1. Interview (short)
+
+For someone getting started with Scarecrow or asking for a walkthrough, read `references/first-session.md` and use it alongside this workflow. It owns the conversational introduction, preference confirmation, and resume record; this skill still owns folder inspection, build/adopt decisions, ingestion, and verification. A direct setup request with sufficient facts can proceed without the walkthrough.
 
 Ask one question at a time; stop as soon as you have enough. If the request already answers a question, do not ask it again.
 
@@ -99,7 +103,9 @@ Two to five sources is enough to prove the loop works. If the person is not avai
 
 ### 5. Set the upkeep cadence
 
-Write a dated "next health check" into `AGENTS.md` (default: four weeks out) and describe what the check covers: stale `verified` dates, wiki pages missing from the index, orphan pages, broken links, entries in `corrections.md` that compiled pages still contradict, and drift between the rules file and the real folders. Offer to schedule a reminder; create one only if the person says yes.
+During guided first use, offer the recurring gap-check setup described in `references/first-session.md` once a useful starting point exists. Its offer makes this upkeep step understandable and optional to schedule; a saved date alone is not an active recurring task.
+
+Write a dated "next health check" into `AGENTS.md` (default: four weeks out) and describe what the check covers: stale `verified` dates, wiki pages missing from the index, orphan pages, broken links, entries in `corrections.md` that compiled pages still contradict, and drift between the rules file and the real folders. Outside guided first use, offer to schedule a reminder; create one only if the person says yes. During guided first use, the gap-check offer above replaces this one, so do not ask again.
 
 ### 6. Verify
 
@@ -116,6 +122,10 @@ Then suggest the real test: open a fresh session in the folder and ask a backgro
 ### 7. Hand over
 
 End with a short summary: mode used, what was created (paths), sources ingested, assumptions made, the upkeep date, and two or three example prompts the person can try in a fresh session.
+
+For guided first use, also follow `references/first-session.md` to record the next step and prepare a fresh-session retrieval check. Distinguish passing the structure checker from observing that a fresh session can retrieve the saved context.
+
+Once the first useful result exists, offer one relevant example of using or developing the brain next, based on its actual purpose. The person may continue real work or explore how the setup should grow; neither requires another onboarding interview.
 
 ## Boundaries
 
@@ -154,6 +164,7 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. Th
 
 ## Changelog
 
+- 0.7.0 (2026-11-08): Add optional conversational onboarding, confirmed working preferences, a resumable local record, and a fresh-session retrieval check. Keep build/adopt and source-confirmation boundaries in the existing workflow. Targeted extension works without using-scarecrow installed, and guided first use asks about scheduling once.
 - 0.6.0 (2026-10-28): Step 3 and the template describe moving the Ingest section to `wiki/AGENTS.md` and the Capsules and Extra checks sections to `_system/AGENTS.md` (each with a `@AGENTS.md` CLAUDE.md beside it) once the root rules file passes about 150 lines; ingest 1.2.0, capsule 4.1.0 and health-check 0.6.0 read them. New brains still start with one root file. No eval run.
 - 0.5.1 (2026-10-27): Refreshed the vendored `check_brain.py` from health-check 0.5.2 (robustness and false-positive fixes). No change to setup's steps.
 - 0.5.0 (2026-10-26): Extracted the existing 0.5.0 setup procedure under the setup identity. using-scarecrow owns framework routing; health-check retains canonical check-script ownership. Setup reads local rules before applying package defaults.
@@ -165,3 +176,4 @@ Python 3.9 or later; `scripts/check_brain.py` uses the standard library only. Th
 - 0.3.0 (2026-10-08): `check_brain.py` is now a copy of the health-check skill's canonical script, enforced by `tests/test_vendored_script.py`. The verify step runs `--structure`, which keeps the build check to structure; the full run adds upkeep checks for health-check. The rules-length warning moved from 200 to 150 lines, matching the template's target.
 - 0.2.0 (2026-10-08): Added a root `open-questions.md` for unknown facts (separate from a project's to-do open items) and a read-only `received/` folder per project for client or stakeholder documents, with `deliverables/` beside it; the check script now records and verifies `received/` files alongside `raw/`. Both ideas came from the no-skill baseline runs in iteration 1.
 - 0.1.0 (2026-10-08): Pilot. Build-new and adopt-existing modes, four-part layout, AGENTS.md with CLAUDE.md pointer, bundled `check_brain.py`. Iteration-1 evals: 30/30 with skill vs 15/30 without (three cases).
+

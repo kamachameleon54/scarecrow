@@ -1,11 +1,11 @@
 ---
 name: using-scarecrow
-description: "Routes work inside a Scarecrow second brain to the smallest focused skill: setup for creating or adopting the brain, ingest for compiling a source, handoff for continuing unfinished work, capsule for preserving finished-work reasoning, and health-check for scheduled upkeep. Use when a request concerns the Scarecrow framework as a whole, when the right component is unclear, or when beginning work in a Scarecrow-managed knowledge base. Read the local rules first and load only the component that owns the request."
+description: "Guides first use and ongoing development of a Scarecrow second brain, routing work to setup, ingest, handoff, capsule, or health-check. Use when getting started, exploring or adapting a setup, asking where something belongs or what to build next, when the right component is unclear, or when beginning work in a Scarecrow-managed knowledge base. Read local rules first and load only the component that owns the request."
 metadata:
   status: draft
-  version: 0.1.0
-  last-updated: 2026-10-26
-  decision: "2026-10-26: Use Scarecrow as the framework identity and route to its five focused components."
+  version: 0.2.0
+  last-updated: 2026-11-08
+  decision: "2026-11-08: Make first use and ongoing development conversational, using existing components and confirmed local rules."
   feedback: "none"
   log: "#Changelog"
   tags: []
@@ -15,17 +15,29 @@ metadata:
 
 Scarecrow is a composable framework for building and caring for a durable, plain-markdown second brain. Read the knowledge base's root rules and any more-specific rules before choosing a component. Local rules override package defaults.
 
+## Welcome and resume
+
+For a getting-started request, an explicit request for a walkthrough, or a bare invocation with no task in a new brain, load `setup` and its `references/first-session.md`. Keep the welcome conversational and ask about one useful task before discussing folders or commands. This is a guided conversation inside the current session, not a separate agent or a new skill the person must learn.
+
+When the local rules point to an onboarding record (default `_system/onboarding.md`), read it before offering another walkthrough. Resume its next step if the person asks to continue. A missing record alone does not mean an experienced person needs onboarding. For a specific work request, route directly below; for a bare invocation in an established brain, briefly offer help with its current work and ask what they want to do. Honor a request to skip the walkthrough without requiring a completion record.
+
 ## Route the request
 
 | Need | Load |
 |---|---|
 | Create a new brain or adopt an existing notes folder | `setup` |
+| Explore the setup, decide where something belongs, adapt to changed work, or choose what to build next | Read `references/develop-your-brain.md`, then load the component it selects |
 | Compile one source into durable reference knowledge | `ingest` |
 | Continue unfinished work in another session | `handoff` |
 | Preserve the reasoning behind completed work | `capsule` |
 | Inspect and maintain system health | `health-check` |
+| Review gaps or run the agreed recurring maintenance visit | `health-check` in standard scope, unless the person asks for a quick or deep check |
 
 If a request spans components, use the fewest components that fully cover it and keep each component's stopping condition. Do not copy a component's procedure into this skill.
+
+## Keep the path visible
+
+Explain the next useful action in the person's language rather than requiring component names. At a milestone or when the person expresses friction, briefly offer one relevant way to develop the setup; follow `references/develop-your-brain.md`. Finish a concrete work request first. During ordinary successful work, keep helping without repeating invitations or treating every correction as a redesign request. Routine exploration is available whenever requested, and a standard health-check can surface it at the agreed upkeep visit.
 
 ## Shared doctrine
 
@@ -44,6 +56,11 @@ If a request spans components, use the fewest components that fully cover it and
 
 ## Changelog
 
+### 0.2.0 (2026-11-08)
+
+Add optional guided first use, continuity through a local onboarding record, and direct routing for returning users. Behavior evaluations are recorded separately from installation validation.
+
 ### 0.1.0 (2026-10-26)
 
 Initial package bootstrap. Routes to the five focused components and carries only shared doctrine.
+
